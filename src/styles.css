@@ -745,39 +745,272 @@ li {
     position: static;
   }
 
-  .nav-wrap,
-  .site-nav {
+  .container {
+    width: min(100% - 1.2rem, 1180px);
+  }
+
+  .nav-wrap {
+    min-height: auto;
+    padding: 0.85rem 0;
+    align-items: flex-start;
     flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .brand {
+    flex: 1 1 100%;
+  }
+
+  .logo-mark {
+    width: 50px;
+    height: 50px;
+    border-radius: 17px;
   }
 
   .site-nav {
+    order: 3;
+    width: 100%;
     justify-content: flex-start;
+    gap: 1.15rem;
+    overflow-x: auto;
+    padding: 0.25rem 0 0.4rem;
+    scrollbar-width: none;
+  }
+
+  .site-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-link {
+    flex: 0 0 auto;
+    font-size: 0.82rem;
+  }
+
+  .nav-link::after {
+    bottom: -0.25rem;
+  }
+
+  .nav-wrap > .button {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.6rem;
+    min-height: 42px;
+    padding: 0.65rem 0.95rem;
+    font-size: 0.82rem;
+  }
+
+  .hero-section,
+  .page-hero {
+    padding: 1.4rem 0 1.6rem;
+  }
+
+  .hero-banner {
+    min-height: 420px;
+    border-radius: 30px;
+  }
+
+  .hero-banner img {
+    height: 420px;
+    object-position: center;
+  }
+
+  .hero-overlay {
+    padding: 1.15rem;
+    background: linear-gradient(180deg, rgba(15, 28, 22, 0.1), rgba(15, 28, 22, 0.66));
+  }
+
+  .hero-overlay-copy {
+    max-width: 290px;
+    margin-top: auto;
+  }
+
+  .hero-overlay-actions {
+    margin-top: 0.9rem;
+  }
+
+  .button {
+    min-height: 44px;
+    padding: 0.68rem 0.95rem;
+    font-size: 0.84rem;
+  }
+
+  .hero-stats {
+    gap: 0.75rem;
+  }
+
+  .info-card,
+  .soft-card,
+  .pillar-panel,
+  .floating-note,
+  .floating-panel,
+  .future-strip {
+    padding: 1rem;
+    border-radius: 22px;
+  }
+
+  .intro-band-grid {
+    padding: 1.1rem;
+    border-radius: 26px;
+  }
+
+  .section {
+    padding: 1rem 0 2.4rem;
+  }
+
+  .section-head {
+    margin-bottom: 1rem;
+  }
+
+  .showcase-gallery {
+    gap: 0.85rem;
+  }
+
+  .gallery-card.tall {
+    min-height: 300px;
+    padding: 0.55rem;
+  }
+
+  .gallery-card.tall img,
+  .photo-frame img {
+    border-radius: 22px;
+  }
+
+  .live-gallery {
+    grid-auto-rows: 190px;
+    gap: 0.75rem;
+  }
+
+  .shot-1,
+  .shot-4 {
+    grid-row: span 1;
+    grid-column: span 1;
+  }
+
+  .leader-media,
+  .leader-media.has-image img {
+    min-height: 220px;
+  }
+
+  .campaign-layout .photo-main {
+    min-height: 340px;
+  }
+
+  .footer-grid {
+    gap: 1rem;
   }
 }
 
 @media (max-width: 640px) {
   .hero-section,
   .page-hero {
-    padding-top: 3.2rem;
+    padding-top: 1rem;
   }
 
   .hero-copy h1,
   .page-hero-shell h1,
-  .campaign-copy h1 {
-    font-size: clamp(1.45rem, 7vw, 2.1rem);
+  .campaign-copy h1,
+  .hero-overlay-copy h1,
+  .section-head h2,
+  .intro-band-grid h2,
+  .showcase-copy h2,
+  .future-strip h2 {
+    font-size: clamp(1.35rem, 7vw, 2rem);
+    line-height: 1.12;
   }
 
-  .brand {
-    width: 100%;
+  .hero-overlay-copy p,
+  .hero-copy p,
+  .page-hero-shell p,
+  .campaign-copy p,
+  .showcase-copy p,
+  p,
+  li {
+    font-size: 0.84rem;
+    line-height: 1.58;
   }
 
   .hero-banner,
   .hero-banner img {
-    min-height: 420px;
-    height: 420px;
+    min-height: 360px;
+    height: 360px;
+    border-radius: 24px;
   }
 
   .hero-overlay {
-    padding: 1.2rem;
+    padding: 1rem;
+  }
+
+  .hero-overlay-actions {
+    gap: 0.55rem;
+  }
+
+  .hero-overlay-actions .button {
+    min-height: 40px;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .eyebrow,
+  .mini-tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+
+  .brand-copy strong {
+    font-size: 0.98rem;
+  }
+
+  .brand-copy span {
+    font-size: 0.78rem;
+  }
+
+  .hero-stats,
+  .story-grid,
+  .pillar-grid,
+  .leadership-grid,
+  .leadership-grid-full,
+  .live-gallery,
+  .showcase-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-shot {
+    border-radius: 22px;
+  }
+
+  .future-list {
+    gap: 0.55rem;
+  }
+
+  .future-list span {
+    padding: 0.58rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .site-footer {
+    padding: 1.6rem 0 2rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .nav-wrap > .button {
+    right: 0;
+  }
+
+  .site-nav {
+    gap: 0.95rem;
+  }
+
+  .hero-banner,
+  .hero-banner img {
+    min-height: 320px;
+    height: 320px;
+  }
+
+  .hero-overlay-copy {
+    max-width: 245px;
+  }
+
+  .hero-overlay-actions .button-secondary {
+    display: none;
   }
 }
