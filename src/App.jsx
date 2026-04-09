@@ -46,11 +46,17 @@ const futureWork = [
 
 const galleryImages = [
   "/ref/mainImage.jpeg",
+  "/ref/662824045_10162033434146949_3693761508649048548_n.jpg",
   "/ref/image1.jpeg",
   "/ref/image2.jpeg",
   "/ref/image3.jpeg",
   "/ref/image4.jpeg",
-  "/ref/image5.jpeg"
+  "/ref/image5.jpeg",
+  "/ref/image6.jpeg",
+  "/ref/image7.jpeg",
+  "/ref/image8.jpeg",
+  "/ref/image9.jpeg",
+  "/ref/WhatsApp Image 2026-04-08 at 11.58.28 PM.jpeg"
 ];
 
 const fallbackActivities = [
@@ -354,7 +360,7 @@ function HomePage() {
             <button
               className={`gallery-shot shot-${index + 1}`}
               key={image}
-              onClick={() => galleryViewer.open(galleryImages, index)}
+              onClick={() => galleryViewer.openViewer(galleryImages, index)}
               type="button"
             >
               <img src={image} alt={`Jeeban Amrit gallery ${index + 1}`} />
@@ -480,8 +486,8 @@ function PlantationPage() {
           </div>
           <button
             className="photo-frame photo-main clickable-media"
-            onClick={() => galleryViewer.open(galleryImages, 1)}
-            type="button"
+              onClick={() => galleryViewer.openViewer(galleryImages, 2)}
+              type="button"
           >
             <img
               src="/ref/image2.jpeg"
@@ -525,11 +531,11 @@ function PlantationPage() {
 
       <section className="section">
         <div className="container live-gallery plantation-gallery">
-          {galleryImages.slice(1).map((image, index) => (
+          {galleryImages.map((image, index) => (
             <button
               className={`gallery-shot shot-${index + 1}`}
               key={image}
-              onClick={() => galleryViewer.open(galleryImages.slice(1), index)}
+              onClick={() => galleryViewer.openViewer(galleryImages, index)}
               type="button"
             >
               <img src={image} alt={`Plantation gallery ${index + 1}`} />
@@ -624,7 +630,7 @@ function ActivityDetailPage() {
           {cover ? (
             <button
               className="photo-frame photo-main clickable-media"
-              onClick={() => galleryViewer.open(mediaItems, 0)}
+              onClick={() => galleryViewer.openViewer(mediaItems, 0)}
               type="button"
             >
               <img src={cover} alt={selectedActivity.title} />
@@ -639,7 +645,7 @@ function ActivityDetailPage() {
               <button
                 className={`gallery-shot shot-${index + 1}`}
                 key={image}
-                onClick={() => galleryViewer.open(mediaItems, index + (cover ? 1 : 0))}
+                onClick={() => galleryViewer.openViewer(mediaItems, index + (cover ? 1 : 0))}
                 type="button"
               >
                 <img src={image} alt={`${selectedActivity.title} ${index + 1}`} />
@@ -834,17 +840,17 @@ function formatDate(date) {
 
 function useGalleryViewer() {
   const [viewer, setViewer] = useState({
-    open: false,
+    isOpen: false,
     items: [],
     index: 0
   });
 
-  function open(items, index = 0) {
-    setViewer({ open: true, items, index });
+  function openViewer(items, index = 0) {
+    setViewer({ isOpen: true, items, index });
   }
 
-  function close() {
-    setViewer((current) => ({ ...current, open: false }));
+  function closeViewer() {
+    setViewer((current) => ({ ...current, isOpen: false }));
   }
 
   function next() {
@@ -861,11 +867,11 @@ function useGalleryViewer() {
     }));
   }
 
-  return { ...viewer, open, close, next, previous };
+  return { ...viewer, openViewer, closeViewer, next, previous };
 }
 
 function Lightbox({ viewer }) {
-  if (!viewer.open || !viewer.items.length) return null;
+  if (!viewer.isOpen || !viewer.items.length) return null;
 
   const item = viewer.items[viewer.index];
   const isVideo = isVideoUrl(item);
@@ -873,9 +879,9 @@ function Lightbox({ viewer }) {
 
   return (
     <div className="lightbox" role="dialog" aria-modal="true" aria-label="Gallery viewer">
-      <button className="lightbox-backdrop" onClick={viewer.close} type="button" aria-label="Close gallery" />
-      <div className="lightbox-panel">
-        <button className="lightbox-close" onClick={viewer.close} type="button" aria-label="Close gallery">
+      <button className="lightbox-backdrop" onClick={viewer.closeViewer} type="button" aria-label="Close gallery" />
+      <div className="lightbox-panel" onClick={(event) => event.stopPropagation()}>
+        <button className="lightbox-close" onClick={viewer.closeViewer} type="button" aria-label="Close gallery">
           Close
         </button>
         {hasMany ? (
