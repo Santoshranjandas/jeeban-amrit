@@ -1,72 +1,71 @@
 import { NavLink, Route, Routes } from "react-router-dom";
 
 const leadership = [
-  { name: "Satya Ranjan Das", role: "President", featured: true, portrait: "poster" },
-  { name: "Shyam Sundar Mohanty", role: "General Secretary", portrait: "placeholder", accent: "green" },
-  { name: "Niranjan Mohanty", role: "Vice President", portrait: "placeholder", accent: "teal" },
-  { name: "Sambid Biswal", role: "Convenor Balasore", portrait: "placeholder", accent: "gold" },
-  { name: "Smarak Dash", role: "Convenor Remuna", portrait: "placeholder", accent: "red" },
-  { name: "Mrutunjay Rout", role: "Treasurer", portrait: "placeholder", accent: "charcoal" }
-];
-
-const initiatives = [
   {
-    title: "Plantation & Urban Beautification",
-    status: "Active Now",
-    tone: "green",
-    text: "The current featured initiative focuses on plantation, greener streets, and a more beautiful urban environment."
+    name: "Satya Ranjan Das",
+    role: "President",
+    featured: true,
+    image: "/ref/mainImage.jpeg"
   },
-  {
-    title: "Urban Development",
-    status: "Coming Next",
-    tone: "teal",
-    text: "This section is ready to grow into civic improvement, cleaner neighborhoods, and community-led development work."
-  },
-  {
-    title: "Blood Donation & Health Support",
-    status: "Planned",
-    tone: "red",
-    text: "A future health section can host blood donation drives, awareness programs, and public wellbeing campaigns."
-  },
-  {
-    title: "Education & Public Awareness",
-    status: "Future Layer",
-    tone: "gold",
-    text: "Educational outreach and community awareness work can be added as the organisation expands its service portfolio."
-  }
+  { name: "Shyam Sundar Mohanty", role: "General Secretary", accent: "mint" },
+  { name: "Niranjan Mohanty", role: "Vice President", accent: "sky" },
+  { name: "Sambid Biswal", role: "Convenor Balasore", accent: "sun" },
+  { name: "Smarak Dash", role: "Convenor Remuna", accent: "rose" },
+  { name: "Mrutunjay Rout", role: "Treasurer", accent: "stone" }
 ];
 
 const pillars = [
   {
-    title: "Environment",
-    icon: "E",
-    tone: "green",
-    text: "Plantation drives, greener streets, and long-term ecological responsibility."
+    title: "Environmental Action",
+    icon: "01",
+    text: "Plantation, green corridors, and beautification efforts that improve public space."
   },
   {
-    title: "Urban Development",
-    icon: "U",
-    tone: "teal",
-    text: "Better public spaces, cleaner surroundings, and visible civic improvement."
+    title: "Urban Improvement",
+    icon: "02",
+    text: "Cleaner streets, stronger civic pride, and more welcoming community infrastructure."
   },
   {
-    title: "Health Support",
-    icon: "H",
-    tone: "red",
-    text: "A growing commitment to wellbeing, outreach, and future blood donation initiatives."
+    title: "Health and Care",
+    icon: "03",
+    text: "A foundation for future blood donation, wellbeing outreach, and service-oriented support."
+  }
+];
+
+const futureWork = [
+  "Blood donation drives",
+  "Health awareness campaigns",
+  "Expanded urban development pages",
+  "Educational and social welfare updates"
+];
+
+const galleryImages = [
+  "/ref/mainImage.jpeg",
+  "/ref/image1.jpeg",
+  "/ref/image2.jpeg",
+  "/ref/image3.jpeg",
+  "/ref/image4.jpeg",
+  "/ref/image5.jpeg"
+];
+
+const storyCards = [
+  {
+    title: "Grounded in local action",
+    text: "Jeeban Amrit grows through visible work in public spaces, not abstract messaging."
   },
   {
-    title: "Awareness & Education",
-    icon: "A",
-    tone: "gold",
-    text: "Community knowledge, social awareness, and shared responsibility through engagement."
+    title: "Built for many causes",
+    text: "The site can grow from plantation into blood donation, civic programs, and broader social service."
+  },
+  {
+    title: "Designed to earn trust",
+    text: "Real campaign moments, clear leadership, and a softer NGO-style presentation make the organisation feel credible."
   }
 ];
 
 function App() {
   return (
     <div className="app-shell">
-      <DecorativeBackdrop />
       <SiteHeader />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -93,24 +92,24 @@ function SiteHeader() {
           </span>
         </NavLink>
         <nav className="site-nav">
-          <HeaderLink to="/">Home</HeaderLink>
-          <HeaderLink to="/about">About</HeaderLink>
-          <HeaderLink to="/initiatives">Initiatives</HeaderLink>
-          <HeaderLink to="/plantation-drive-2026">Plantation Drive</HeaderLink>
-          <HeaderLink to="/leadership">Leadership</HeaderLink>
-          <HeaderLink to="/contact">Contact</HeaderLink>
+          <HeaderLink to="/" tone="tone-home">Home</HeaderLink>
+          <HeaderLink to="/about" tone="tone-about">About</HeaderLink>
+          <HeaderLink to="/initiatives" tone="tone-initiatives">Initiatives</HeaderLink>
+          <HeaderLink to="/plantation-drive-2026" tone="tone-plantation">Plantation</HeaderLink>
+          <HeaderLink to="/leadership" tone="tone-leadership">Leadership</HeaderLink>
+          <HeaderLink to="/contact" tone="tone-contact">Contact</HeaderLink>
         </nav>
         <NavLink className="button button-primary" to="/contact">
-          Volunteer
+          Connect
         </NavLink>
       </div>
     </header>
   );
 }
 
-function HeaderLink({ to, children }) {
+function HeaderLink({ to, children, tone }) {
   return (
-    <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to={to}>
+    <NavLink className={({ isActive }) => `nav-link ${tone}${isActive ? " active" : ""}`} to={to}>
       {children}
     </NavLink>
   );
@@ -125,17 +124,21 @@ function SiteFooter() {
             <LogoMark />
             <span className="brand-copy">
               <strong>Jeeban Amrit</strong>
-              <span>Working for a healthier, greener, and more compassionate tomorrow.</span>
+              <span>One Tree, One Life. Service that grows from the ground up.</span>
             </span>
           </div>
         </div>
-        <div>
+        <div className="footer-column">
           <h3>Current Focus</h3>
-          <p>Plantation Drive 2026<br />Urban Beautification Program<br />Balasore, Odisha</p>
+          <p>Plantation Drive 2026</p>
+          <p>Urban Beautification Program</p>
+          <p>Balasore, Odisha</p>
         </div>
-        <div>
-          <h3>What Grows Next</h3>
-          <p>Blood donation, urban development, and other social service pages can be expanded as more information arrives.</p>
+        <div className="footer-column">
+          <h3>Next Expansion</h3>
+          <p>Blood donation</p>
+          <p>Health support</p>
+          <p>Urban development</p>
         </div>
       </div>
     </footer>
@@ -157,73 +160,72 @@ function HomePage() {
   return (
     <main>
       <section className="hero-section">
-        <div className="container hero-grid">
-          <div className="hero-copy">
-            <span className="eyebrow">Community. Care. Action.</span>
-            <h1>A modern social service platform for many causes, not just one.</h1>
-            <p>
-              Jeeban Amrit brings together environmental action, urban development, public wellbeing,
-              and service-led community initiatives under one living identity.
-            </p>
-            <div className="hero-actions">
-              <NavLink className="button button-primary" to="/initiatives">
-                Explore Initiatives
-              </NavLink>
-              <NavLink className="button button-secondary" to="/contact">
-                Join Our Mission
-              </NavLink>
-            </div>
-            <div className="hero-stat-row">
-              <InfoChip label="Current live page" value="Plantation Drive 2026" />
-              <InfoChip label="Place" value="Balasore, Odisha" />
-              <InfoChip label="Next vertical" value="Blood Donation" />
-            </div>
-          </div>
-          <div className="hero-visual">
-            <div className="hero-orb hero-orb-one" />
-            <div className="hero-orb hero-orb-two" />
-            <div className="poster-card">
-              <div className="poster-card-head">
-                <span className="mini-tag">Featured Campaign</span>
-                <span className="pulse-dot" />
+        <div className="container hero-header">
+          <article className="hero-banner">
+            <img
+              src="/ref/mainImage.jpeg"
+              alt="Jeeban Amrit front page main event photo"
+            />
+            <div className="hero-overlay">
+              <div className="hero-overlay-copy">
+                <span className="eyebrow">Community-led impact</span>
+                <h1>Jeeban Amrit</h1>
+                <p>Real civic action through plantation, beautification, and community service.</p>
               </div>
-              <img
-                src="/ref/662824045_10162033434146949_3693761508649048548_n.jpg"
-                alt="Jeeban Amrit Plantation Drive 2026 poster"
-              />
+              <div className="hero-overlay-actions">
+                <NavLink className="button button-primary" to="/plantation-drive-2026">
+                  See campaign
+                </NavLink>
+                <NavLink className="button button-secondary" to="/about">
+                  About us
+                </NavLink>
+              </div>
             </div>
-          </div>
+          </article>
         </div>
       </section>
 
-      <SectionIntro
-        eyebrow="Our Identity"
-        title="A broader organisation brand with campaign-specific visual themes."
-        text="The website now treats Jeeban Amrit as a multi-cause organisation. Plantation gets the botanical tone, while the wider platform stays more civic, contemporary, and flexible."
-      />
+      <section className="section section-compact">
+        <div className="container hero-stats">
+          <InfoCard label="Featured initiative" value="Plantation Drive 2026" />
+          <InfoCard label="Location" value="Fandi Bazar, Balasore" />
+          <InfoCard label="Focus" value="Plantation and urban beauty" />
+        </div>
+      </section>
+
+      <section className="section section-intro-band">
+        <div className="container intro-band-grid">
+          <div>
+            <span className="eyebrow">Why this version feels stronger</span>
+            <h2>Less brochure. More editorial NGO platform.</h2>
+          </div>
+          <p>
+            This direction moves the site closer to the reference you liked by using softer surfaces, larger rounded image areas,
+            clearer content rhythm, and more emotional campaign-led storytelling.
+          </p>
+        </div>
+      </section>
 
       <section className="section">
-        <div className="container card-grid two-up">
-          <FeaturePanel
-            title="Designed for growth"
-            text="The structure is ready for plantation, blood donation, urban development, and future welfare initiatives without redesigning the whole site every time."
-          />
-          <FeaturePanel
-            title="Campaign-first storytelling"
-            text="Instead of plain text pages, the site now has a reusable, component-driven layout that can grow into a richer experience as more materials arrive."
-          />
+        <div className="container story-grid">
+          {storyCards.map((card) => (
+            <article className="soft-card" key={card.title}>
+              <h3>{card.title}</h3>
+              <p>{card.text}</p>
+            </article>
+          ))}
         </div>
       </section>
 
       <section className="section section-soft">
         <div className="container section-head">
-          <span className="eyebrow">Core Service Areas</span>
-          <h2>One mission, multiple ways to serve the public.</h2>
+          <span className="eyebrow">What Jeeban Amrit works on</span>
+          <h2>A social platform that can grow across environment, health, and civic development.</h2>
         </div>
-        <div className="container card-grid four-up">
+        <div className="container pillar-grid">
           {pillars.map((pillar) => (
-            <article className="pillar-card" key={pillar.title}>
-              <span className={`tone-icon ${pillar.tone}`}>{pillar.icon}</span>
+            <article className="pillar-panel" key={pillar.title}>
+              <span className="pillar-index">{pillar.icon}</span>
               <h3>{pillar.title}</h3>
               <p>{pillar.text}</p>
             </article>
@@ -232,51 +234,85 @@ function HomePage() {
       </section>
 
       <section className="section">
-        <div className="container split-showcase">
+        <div className="container showcase-layout">
           <div className="showcase-copy">
-            <span className="eyebrow">Current Highlight</span>
-            <h2>Plantation Drive 2026 starts the digital journey.</h2>
+            <span className="eyebrow">Current campaign</span>
+            <h2>Plantation Drive 2026 anchors the public identity right now.</h2>
             <p>
-              The first completed initiative page reflects Jeeban Amrit’s urban beautification effort with a greener, more botanical atmosphere drawn from the poster you shared.
+              For the current phase, the website presents Jeeban Amrit through its plantation and urban beautification work.
+              Future sections can expand into blood donation and other areas without changing the core design language.
             </p>
             <ul className="detail-list">
               <li>Inauguration Ceremony</li>
-              <li>Urban Beautification Program</li>
-              <li>8 April 2026, 7:00 AM</li>
+              <li>8 April 2026 at 7:00 AM</li>
+              <li>Fandi Bazar, Balasore, Odisha</li>
             </ul>
             <NavLink className="button button-primary" to="/plantation-drive-2026">
-              Open Plantation Page
+              Visit campaign page
             </NavLink>
           </div>
-          <div className="showcase-panel">
-            <div className="gradient-band green-band" />
-            <div className="showcase-shell">
+          <div className="showcase-gallery">
+            <article className="gallery-card tall">
               <img
-                src="/ref/662824045_10162033434146949_3693761508649048548_n.jpg"
-                alt="Plantation drive poster"
+                src="/ref/image1.jpeg"
+                alt="Jeeban Amrit plantation activity"
               />
-            </div>
+            </article>
+            <article className="gallery-card accent-card">
+              <span className="mini-tag">Field activity</span>
+              <h3>Community presence on the ground</h3>
+              <p>The site now starts using the actual plantation photos from your organisation to build a more authentic and trustworthy visual identity.</p>
+            </article>
           </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container section-head">
+          <span className="eyebrow">Photo story</span>
+          <h2>Real campaign moments from Jeeban Amrit's work.</h2>
+        </div>
+        <div className="container live-gallery">
+          {galleryImages.map((image, index) => (
+            <article className={`gallery-shot shot-${index + 1}`} key={image}>
+              <img src={image} alt={`Jeeban Amrit gallery ${index + 1}`} />
+            </article>
+          ))}
         </div>
       </section>
 
       <section className="section section-soft">
         <div className="container section-head">
           <span className="eyebrow">Leadership</span>
-          <h2>Guided by people committed to practical social service.</h2>
+          <h2>The faces behind the initiative.</h2>
+          <p>The leadership cards are now more image-forward and easier to expand as you collect portraits.</p>
         </div>
-        <div className="container leader-preview-grid">
+        <div className="container leadership-grid">
           {leadership.slice(0, 3).map((person) => (
             <LeaderCard
               key={person.name}
               person={person}
               description={
                 person.featured
-                  ? "Leading Jeeban Amrit’s public-facing mission and current campaign direction."
-                  : "Part of the core team helping shape the organisation’s service efforts."
+                  ? "Leading the organisation's current public-facing initiative and campaign momentum."
+                  : "Supporting Jeeban Amrit's community-led programs and operational coordination."
               }
             />
           ))}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container future-strip">
+          <div className="future-strip-copy">
+            <span className="eyebrow">Next chapters</span>
+            <h2>The platform is ready for the organisation to expand.</h2>
+          </div>
+          <div className="future-list">
+            {futureWork.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
+          </div>
         </div>
       </section>
     </main>
@@ -287,31 +323,13 @@ function AboutPage() {
   return (
     <PageFrame
       eyebrow="About Jeeban Amrit"
-      title="Built to unite compassion, civic pride, and community action."
-      intro="Jeeban Amrit is envisioned as a social service organisation whose work can extend across plantation, urban development, health support, blood donation, and public awareness."
+      title="A service organisation shaped by care, place, and public participation."
+      intro="Jeeban Amrit is growing as a civic-minded social organisation whose work can extend from plantation into health support, blood donation, and broader community upliftment."
     >
-      <div className="card-grid two-up">
-        <FeaturePanel
-          title="Vision"
-          text="To help build communities that are healthier, cleaner, greener, and more actively involved in shaping a better shared future."
-        />
-        <FeaturePanel
-          title="Mission"
-          text="To create practical, visible initiatives that improve public life and invite people to become part of meaningful service."
-        />
-      </div>
-      <div className="section-block">
-        <SectionIntro
-          eyebrow="Guiding Values"
-          title="Care, dignity, participation, and visible impact."
-          text="The digital identity is intentionally flexible so each future program can have its own tone while still belonging to one recognisable Jeeban Amrit platform."
-        />
-      </div>
-      <div className="card-grid four-up">
-        <MiniValue title="Compassion" text="Service begins with care for people and public life." />
-        <MiniValue title="Action" text="The organisation aims for practical and visible change." />
-        <MiniValue title="Participation" text="Local involvement is central to long-term impact." />
-        <MiniValue title="Responsibility" text="Every initiative should leave communities stronger." />
+      <div className="story-grid">
+        <SoftCard title="Vision" text="To nurture healthier, greener, more connected communities through practical local action." />
+        <SoftCard title="Mission" text="To bring people together through visible service, dignified community work, and future-focused social initiatives." />
+        <SoftCard title="Approach" text="Start with real, grounded campaigns. Build trust through action. Expand thoughtfully into new service areas." />
       </div>
     </PageFrame>
   );
@@ -321,22 +339,22 @@ function InitiativesPage() {
   return (
     <PageFrame
       eyebrow="Initiatives"
-      title="A structure ready for multiple causes."
-      intro="Plantation is the first fully detailed page, but the platform is designed so blood donation, urban development, and future service areas can be added without starting over."
+      title="A multi-cause structure with one clear starting point."
+      intro="Plantation is the first complete story on the site, but the design is intentionally ready for future blood donation, health, and urban development pages."
     >
-      <div className="card-grid two-up">
-        {initiatives.map((initiative) => (
-          <article className={`initiative-tile ${initiative.tone}`} key={initiative.title}>
-            <span className="mini-tag">{initiative.status}</span>
-            <h3>{initiative.title}</h3>
-            <p>{initiative.text}</p>
-            {initiative.title === "Plantation & Urban Beautification" ? (
-              <NavLink className="text-link" to="/plantation-drive-2026">
-                View live campaign
-              </NavLink>
-            ) : null}
+      <div className="pillar-grid">
+        {pillars.map((pillar) => (
+          <article className="pillar-panel" key={pillar.title}>
+            <span className="pillar-index">{pillar.icon}</span>
+            <h3>{pillar.title}</h3>
+            <p>{pillar.text}</p>
           </article>
         ))}
+      </div>
+      <div className="section-block">
+        <NavLink className="button button-primary" to="/plantation-drive-2026">
+          Open plantation campaign
+        </NavLink>
       </div>
     </PageFrame>
   );
@@ -345,63 +363,71 @@ function InitiativesPage() {
 function PlantationPage() {
   return (
     <main>
-      <section className="campaign-hero">
-        <div className="container campaign-grid">
+      <section className="page-hero page-hero-green">
+        <div className="container campaign-layout">
           <div className="campaign-copy">
-            <span className="eyebrow">Featured Initiative</span>
+            <span className="eyebrow">Featured plantation page</span>
             <h1>Plantation Drive 2026</h1>
             <p>
-              A greener chapter of Jeeban Amrit, shaped around urban beautification, plantation, and a more hopeful public environment.
+              This page carries the greener visual theme within the broader Jeeban Amrit platform, presenting the Urban Beautification Program as the organisation's first major public initiative online.
             </p>
             <div className="hero-actions">
               <NavLink className="button button-primary" to="/contact">
                 Participate
               </NavLink>
-              <NavLink className="button button-secondary" to="/initiatives">
-                See All Initiatives
+              <NavLink className="button button-secondary" to="/leadership">
+                Meet the team
               </NavLink>
             </div>
-            <div className="timeline-card">
-              <InfoChip label="Date" value="8 April 2026" />
-              <InfoChip label="Time" value="7:00 AM" />
-              <InfoChip label="Venue" value="Fandi Bazar, Balasore" />
-            </div>
           </div>
-          <div className="campaign-visual">
-            <div className="leaf-glow" />
-            <div className="poster-card campaign-poster">
-              <img
-                src="/ref/662824045_10162033434146949_3693761508649048548_n.jpg"
-                alt="Plantation Drive 2026 campaign poster"
-              />
-            </div>
-          </div>
+          <article className="photo-frame photo-main">
+            <img
+              src="/ref/image2.jpeg"
+              alt="Plantation Drive 2026"
+            />
+          </article>
         </div>
       </section>
 
       <section className="section">
-        <div className="container card-grid two-up">
-          <FeaturePanel
-            title="Urban Beautification Program"
-            text="This campaign connects environmental care with civic pride by improving the look, feel, and environmental quality of public space."
-          />
-          <FeaturePanel
-            title="Campaign Message"
-            text="One Tree, One Life points to something larger than plantation alone: it suggests care, continuity, responsibility, and a better tomorrow."
-          />
+        <div className="container story-grid">
+          <SoftCard title="Date" text="8 April 2026" />
+          <SoftCard title="Time" text="7:00 AM" />
+          <SoftCard title="Venue" text="Fandi Bazar, Balasore, Odisha" />
         </div>
       </section>
 
       <section className="section section-soft">
         <div className="container section-head">
-          <span className="eyebrow">Why It Matters</span>
-          <h2>Plantation as visible public transformation.</h2>
+          <span className="eyebrow">Why it matters</span>
+          <h2>Plantation here is also about civic beauty and shared ownership.</h2>
         </div>
-        <div className="container card-grid four-up">
-          <MiniValue title="Cleaner Surroundings" text="Trees and greener streets improve everyday urban life." />
-          <MiniValue title="Civic Pride" text="Beautified public spaces create stronger community connection." />
-          <MiniValue title="Local Participation" text="The initiative invites people to take part in shared change." />
-          <MiniValue title="Long-Term Value" text="Each plantation effort can become part of a wider movement." />
+        <div className="container pillar-grid">
+          <article className="pillar-panel">
+            <span className="pillar-index">01</span>
+            <h3>Greener roadsides</h3>
+            <p>More shade, better public atmosphere, and a visible sign of care for the city.</p>
+          </article>
+          <article className="pillar-panel">
+            <span className="pillar-index">02</span>
+            <h3>Community pride</h3>
+            <p>Beautified spaces invite people to value, protect, and participate in their surroundings.</p>
+          </article>
+          <article className="pillar-panel">
+            <span className="pillar-index">03</span>
+            <h3>Long-term impact</h3>
+            <p>Each plantation effort can become a seed for deeper civic and social transformation.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container live-gallery plantation-gallery">
+          {galleryImages.slice(1).map((image, index) => (
+            <article className={`gallery-shot shot-${index + 1}`} key={image}>
+              <img src={image} alt={`Plantation gallery ${index + 1}`} />
+            </article>
+          ))}
         </div>
       </section>
     </main>
@@ -412,18 +438,18 @@ function LeadershipPage() {
   return (
     <PageFrame
       eyebrow="Leadership"
-      title="The people currently visible in Jeeban Amrit’s public material."
-      intro="This section can later grow into fuller profiles, portraits, and messages once more official information is available."
+      title="People shaping Jeeban Amrit's public mission."
+      intro="The current leadership view highlights the office bearers from the available campaign material and is ready to grow as more portraits and bios become available."
     >
-      <div className="card-grid three-up">
+      <div className="leadership-grid leadership-grid-full">
         {leadership.map((person) => (
           <LeaderCard
             key={person.name}
             person={person}
             description={
               person.featured
-                ? "Leading the current public identity and featured initiative of the organisation."
-                : "Part of the current leadership team referenced in the campaign material."
+                ? "Leading Jeeban Amrit's current initiative and helping define the organisation's public direction."
+                : "Part of the leadership team supporting local coordination, outreach, and organisational growth."
             }
           />
         ))}
@@ -436,27 +462,13 @@ function ContactPage() {
   return (
     <PageFrame
       eyebrow="Contact"
-      title="A ready contact hub for volunteers, supporters, and future collaborators."
-      intro="Official phone, email, and social details can be dropped into this page later without changing the design structure."
+      title="A clean space for volunteers, supporters, and future collaborators."
+      intro="The structure is ready for phone, email, address, and social links whenever the official contact details are finalised."
     >
-      <div className="card-grid two-up">
-        <FeaturePanel
-          title="Ways to connect"
-          text="Volunteer for future initiatives, support campaigns, collaborate on social programs, or reach out to learn more about Jeeban Amrit."
-        />
-        <FeaturePanel
-          title="Details to add next"
-          text="Phone number, email, office address, donation information, and official social media links can be integrated here."
-        />
-      </div>
-      <div className="section-block">
-        <article className="wide-panel">
-          <span className="mini-tag">Current event location</span>
-          <h3>Fandi Bazar, Balasore, Odisha</h3>
-          <p>
-            This is currently the published venue for Plantation Drive 2026 and can anchor the contact page until the organisation’s permanent communication details are ready.
-          </p>
-        </article>
+      <div className="story-grid">
+        <SoftCard title="Volunteer" text="Join plantation and future community initiatives." />
+        <SoftCard title="Collaborate" text="Support local campaigns, outreach, and public events." />
+        <SoftCard title="Contact setup" text="Phone, email, social, and donation details can be added here next." />
       </div>
     </PageFrame>
   );
@@ -466,7 +478,7 @@ function PageFrame({ eyebrow, title, intro, children }) {
   return (
     <main>
       <section className="page-hero">
-        <div className="container page-hero-inner">
+        <div className="container page-hero-shell">
           <span className="eyebrow">{eyebrow}</span>
           <h1>{title}</h1>
           <p>{intro}</p>
@@ -479,9 +491,9 @@ function PageFrame({ eyebrow, title, intro, children }) {
   );
 }
 
-function FeaturePanel({ title, text }) {
+function SoftCard({ title, text }) {
   return (
-    <article className="feature-panel">
+    <article className="soft-card">
       <h3>{title}</h3>
       <p>{text}</p>
     </article>
@@ -491,17 +503,10 @@ function FeaturePanel({ title, text }) {
 function LeaderCard({ person, description }) {
   return (
     <article className={`leader-card${person.featured ? " featured" : ""}`}>
-      <div className={`leader-portrait ${person.portrait === "poster" ? "photo" : `placeholder ${person.accent}`}`}>
-        {person.portrait === "poster" ? (
-          <img
-            src="/ref/662824045_10162033434146949_3693761508649048548_n.jpg"
-            alt={person.name}
-          />
-        ) : (
-          <span>{getInitials(person.name)}</span>
-        )}
+      <div className={`leader-media${person.image ? " has-image" : ` tone-${person.accent}`}`}>
+        {person.image ? <img src={person.image} alt={person.name} /> : <span>{getInitials(person.name)}</span>}
       </div>
-      <div className="leader-card-body">
+      <div className="leader-body">
         <span className="mini-tag">{person.role}</span>
         <h3>{person.name}</h3>
         <p>{description}</p>
@@ -510,42 +515,11 @@ function LeaderCard({ person, description }) {
   );
 }
 
-function MiniValue({ title, text }) {
+function InfoCard({ label, value }) {
   return (
-    <article className="mini-card">
-      <h3>{title}</h3>
-      <p>{text}</p>
-    </article>
-  );
-}
-
-function InfoChip({ label, value }) {
-  return (
-    <div className="info-chip">
+    <div className="info-card">
       <span>{label}</span>
       <strong>{value}</strong>
-    </div>
-  );
-}
-
-function SectionIntro({ eyebrow, title, text }) {
-  return (
-    <section className="section">
-      <div className="container section-head">
-        <span className="eyebrow">{eyebrow}</span>
-        <h2>{title}</h2>
-        <p>{text}</p>
-      </div>
-    </section>
-  );
-}
-
-function DecorativeBackdrop() {
-  return (
-    <div className="decorative-backdrop" aria-hidden="true">
-      <span className="backdrop-blob one" />
-      <span className="backdrop-blob two" />
-      <span className="backdrop-blob three" />
     </div>
   );
 }
