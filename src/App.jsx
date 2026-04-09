@@ -220,6 +220,7 @@ function LogoMark() {
 function HomePage() {
   const { activities } = useActivities();
   const latestActivities = activities.slice(0, 3);
+  const galleryViewer = useGalleryViewer();
 
   return (
     <main>
@@ -350,9 +351,14 @@ function HomePage() {
         </div>
         <div className="container live-gallery">
           {galleryImages.map((image, index) => (
-            <article className={`gallery-shot shot-${index + 1}`} key={image}>
+            <button
+              className={`gallery-shot shot-${index + 1}`}
+              key={image}
+              onClick={() => galleryViewer.open(galleryImages, index)}
+              type="button"
+            >
               <img src={image} alt={`Jeeban Amrit gallery ${index + 1}`} />
-            </article>
+            </button>
           ))}
         </div>
       </section>
@@ -391,6 +397,7 @@ function HomePage() {
           </div>
         </div>
       </section>
+      <Lightbox viewer={galleryViewer} />
     </main>
   );
 }
@@ -450,6 +457,8 @@ function InitiativesPage() {
 }
 
 function PlantationPage() {
+  const galleryViewer = useGalleryViewer();
+
   return (
     <main>
       <section className="page-hero page-hero-green">
@@ -469,12 +478,16 @@ function PlantationPage() {
               </NavLink>
             </div>
           </div>
-          <article className="photo-frame photo-main">
+          <button
+            className="photo-frame photo-main clickable-media"
+            onClick={() => galleryViewer.open(galleryImages, 1)}
+            type="button"
+          >
             <img
               src="/ref/image2.jpeg"
               alt="Plantation Drive 2026"
             />
-          </article>
+          </button>
         </div>
       </section>
 
@@ -513,12 +526,18 @@ function PlantationPage() {
       <section className="section">
         <div className="container live-gallery plantation-gallery">
           {galleryImages.slice(1).map((image, index) => (
-            <article className={`gallery-shot shot-${index + 1}`} key={image}>
+            <button
+              className={`gallery-shot shot-${index + 1}`}
+              key={image}
+              onClick={() => galleryViewer.open(galleryImages.slice(1), index)}
+              type="button"
+            >
               <img src={image} alt={`Plantation gallery ${index + 1}`} />
-            </article>
+            </button>
           ))}
         </div>
       </section>
+      <Lightbox viewer={galleryViewer} />
     </main>
   );
 }
@@ -586,6 +605,8 @@ function ActivityDetailPage() {
 
   const cover = getActivityImage(selectedActivity);
   const gallery = getActivityGallery(selectedActivity);
+  const galleryViewer = useGalleryViewer();
+  const mediaItems = [...(cover ? [cover] : []), ...gallery, ...(selectedActivity.videoUrls || [])];
 
   return (
     <main>
@@ -601,9 +622,13 @@ function ActivityDetailPage() {
             </div>
           </div>
           {cover ? (
-            <article className="photo-frame photo-main">
+            <button
+              className="photo-frame photo-main clickable-media"
+              onClick={() => galleryViewer.open(mediaItems, 0)}
+              type="button"
+            >
               <img src={cover} alt={selectedActivity.title} />
-            </article>
+            </button>
           ) : null}
         </div>
       </section>
@@ -611,9 +636,14 @@ function ActivityDetailPage() {
         <section className="section">
           <div className="container live-gallery">
             {gallery.map((image, index) => (
-              <article className={`gallery-shot shot-${index + 1}`} key={image}>
+              <button
+                className={`gallery-shot shot-${index + 1}`}
+                key={image}
+                onClick={() => galleryViewer.open(mediaItems, index + (cover ? 1 : 0))}
+                type="button"
+              >
                 <img src={image} alt={`${selectedActivity.title} ${index + 1}`} />
-              </article>
+              </button>
             ))}
           </div>
         </section>
@@ -629,6 +659,7 @@ function ActivityDetailPage() {
           </div>
         </section>
       ) : null}
+      <Lightbox viewer={galleryViewer} />
     </main>
   );
 }
@@ -799,6 +830,100 @@ function formatDate(date) {
     month: "short",
     year: "numeric"
   }).format(new Date(date));
+}
+
+function useGalleryViewer() {
+  const [viewer, setViewer] = useState({
+    open: false,
+    items: [],
+    index: 0
+  });
+
+  function open(items, index = 0) {
+    setViewer({ open: true, items, index });
+  }
+
+  function close() {
+    setViewer((current) => ({ ...current, open: false }));
+  }
+
+  function next() {
+    setViewer((current) => ({
+      ...current,
+      index: (current.index + 1) % current.items.length
+    }));
+  }
+
+  function previous() {
+    setViewer((current) => ({
+      ...current,
+      index: (current.index - 1 + current.items.length) % current.items.length
+    }));
+  }
+
+  return { ...viewer, open, close, next, previous };
+}
+
+function Lightbox({ viewer }) {
+  if (!viewer.open || !viewer.items.length) return null;
+
+  const item = viewer.items[viewer.index];
+  const isVideo = isVideoUrl(item);
+  const hasMany = viewer.items.length > 1;
+
+  return (
+    <div className="lightbox" role="dialog" aria-modal="true" aria-label="Gallery viewer">
+      <button className="lightbox-backdrop" onClick={viewer.close} type="button" aria-label="Close gallery" />
+      <div className="lightbox-panel">
+        <button className="lightbox-close" onClick={viewer.close} type="button" aria-label="Close gallery">
+          Close
+        </button>
+        {hasMany ? (
+          <button className="lightbox-nav lightbox-prev" onClick={viewer.previous} type="button" aria-label="Previous item">
+            Prev
+          </button>
+        ) : null}
+        <div className="lightbox-media">
+          {isVideo ? (
+            <iframe
+              src={getEmbeddableVideoUrl(item)}
+              title="Activity video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <img src={item} alt="Gallery item" />
+          )}
+        </div>
+        {hasMany ? (
+          <button className="lightbox-nav lightbox-next" onClick={viewer.next} type="button" aria-label="Next item">
+            Next
+          </button>
+        ) : null}
+        <div className="lightbox-count">
+          {viewer.index + 1} / {viewer.items.length}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function isVideoUrl(url) {
+  return /youtube\.com|youtu\.be|vimeo\.com|\.mp4($|\?)/i.test(url);
+}
+
+function getEmbeddableVideoUrl(url) {
+  if (/youtu\.be\//i.test(url)) {
+    const id = url.split("youtu.be/")[1]?.split(/[?&]/)[0];
+    return `https://www.youtube.com/embed/${id}`;
+  }
+
+  if (/youtube\.com/i.test(url)) {
+    const id = new URL(url).searchParams.get("v");
+    return id ? `https://www.youtube.com/embed/${id}` : url;
+  }
+
+  return url;
 }
 
 export default App;
