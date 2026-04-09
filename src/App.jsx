@@ -1,4 +1,9 @@
-import { NavLink, Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Route, Routes, useParams } from "react-router-dom";
+import { Studio } from "sanity";
+import sanityConfig from "../sanity.config";
+import { sanityClient } from "./sanity/client";
+import { urlFor } from "./sanity/image";
 
 const leadership = [
   {
@@ -48,6 +53,60 @@ const galleryImages = [
   "/ref/image5.jpeg"
 ];
 
+const fallbackActivities = [
+  {
+    _id: "local-plantation-drive",
+    title: "Plantation Drive 2026",
+    slug: { current: "plantation-drive-2026" },
+    category: "plantation",
+    date: "2026-04-08",
+    location: "Fandi Bazar, Balasore",
+    summary: "Jeeban Amrit launched its plantation and urban beautification initiative with community participation in Balasore.",
+    coverUrl: "/ref/mainImage.jpeg",
+    galleryUrls: galleryImages
+  },
+  {
+    _id: "local-urban-beautification",
+    title: "Urban Beautification Program",
+    slug: { current: "urban-beautification-program" },
+    category: "urban-development",
+    date: "2026-04-08",
+    location: "Balasore, Odisha",
+    summary: "The campaign highlights cleaner, greener roadsides and a stronger sense of civic ownership.",
+    coverUrl: "/ref/image1.jpeg",
+    galleryUrls: ["/ref/image1.jpeg", "/ref/image2.jpeg", "/ref/image3.jpeg"]
+  }
+];
+
+const activitiesQuery = `*[_type == "activity" && published == true] | order(date desc, _createdAt desc) {
+  _id,
+  title,
+  slug,
+  category,
+  date,
+  location,
+  summary,
+  coverImage,
+  galleryImages,
+  videoUrls,
+  featured
+}`;
+
+const activityBySlugQuery = `*[_type == "activity" && published == true && slug.current == $slug][0] {
+  _id,
+  title,
+  slug,
+  category,
+  date,
+  location,
+  summary,
+  body,
+  coverImage,
+  galleryImages,
+  videoUrls,
+  featured
+}`;
+
 const storyCards = [
   {
     title: "Grounded in local action",
@@ -72,8 +131,10 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/initiatives" element={<InitiativesPage />} />
         <Route path="/plantation-drive-2026" element={<PlantationPage />} />
+        <Route path="/activities/:slug" element={<ActivityDetailPage />} />
         <Route path="/leadership" element={<LeadershipPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/studio/*" element={<Studio config={sanityConfig} />} />
       </Routes>
       <SiteFooter />
     </div>
@@ -157,6 +218,9 @@ function LogoMark() {
 }
 
 function HomePage() {
+  const { activities } = useActivities();
+  const latestActivities = activities.slice(0, 3);
+
   return (
     <main>
       <section className="hero-section">
@@ -269,6 +333,18 @@ function HomePage() {
 
       <section className="section">
         <div className="container section-head">
+          <span className="eyebrow">Latest activities</span>
+          <h2>Updates you can manage from the admin panel.</h2>
+        </div>
+        <div className="container activity-grid">
+          {latestActivities.map((activity) => (
+            <ActivityCard activity={activity} key={activity._id} />
+          ))}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container section-head">
           <span className="eyebrow">Photo story</span>
           <h2>Real campaign moments from Jeeban Amrit's work.</h2>
         </div>
@@ -336,6 +412,8 @@ function AboutPage() {
 }
 
 function InitiativesPage() {
+  const { activities } = useActivities();
+
   return (
     <PageFrame
       eyebrow="Initiatives"
@@ -355,6 +433,17 @@ function InitiativesPage() {
         <NavLink className="button button-primary" to="/plantation-drive-2026">
           Open plantation campaign
         </NavLink>
+      </div>
+      <div className="section-block">
+        <div className="section-head">
+          <span className="eyebrow">Published updates</span>
+          <h2>Activities and news from the admin panel.</h2>
+        </div>
+        <div className="activity-grid">
+          {activities.map((activity) => (
+            <ActivityCard activity={activity} key={activity._id} />
+          ))}
+        </div>
       </div>
     </PageFrame>
   );
@@ -474,6 +563,76 @@ function ContactPage() {
   );
 }
 
+function ActivityDetailPage() {
+  const { slug } = useParams();
+  const { activity, loading } = useActivity(slug);
+  const selectedActivity = activity || fallbackActivities.find((item) => item.slug.current === slug);
+
+  if (loading) {
+    return (
+      <PageFrame eyebrow="Loading" title="Fetching activity details..." intro="Please wait while the latest update loads.">
+        <div className="soft-card">Loading...</div>
+      </PageFrame>
+    );
+  }
+
+  if (!selectedActivity) {
+    return (
+      <PageFrame eyebrow="Not found" title="This activity is not available." intro="It may be unpublished or the link may be incorrect.">
+        <NavLink className="button button-primary" to="/initiatives">Back to initiatives</NavLink>
+      </PageFrame>
+    );
+  }
+
+  const cover = getActivityImage(selectedActivity);
+  const gallery = getActivityGallery(selectedActivity);
+
+  return (
+    <main>
+      <section className="page-hero">
+        <div className="container campaign-layout">
+          <div className="campaign-copy">
+            <span className="eyebrow">{formatCategory(selectedActivity.category)}</span>
+            <h1>{selectedActivity.title}</h1>
+            <p>{selectedActivity.summary}</p>
+            <div className="activity-meta">
+              {selectedActivity.date ? <span>{formatDate(selectedActivity.date)}</span> : null}
+              {selectedActivity.location ? <span>{selectedActivity.location}</span> : null}
+            </div>
+          </div>
+          {cover ? (
+            <article className="photo-frame photo-main">
+              <img src={cover} alt={selectedActivity.title} />
+            </article>
+          ) : null}
+        </div>
+      </section>
+      {gallery.length ? (
+        <section className="section">
+          <div className="container live-gallery">
+            {gallery.map((image, index) => (
+              <article className={`gallery-shot shot-${index + 1}`} key={image}>
+                <img src={image} alt={`${selectedActivity.title} ${index + 1}`} />
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+      {selectedActivity.videoUrls?.length ? (
+        <section className="section section-soft">
+          <div className="container story-grid">
+            {selectedActivity.videoUrls.map((video) => (
+              <a className="soft-card text-link" href={video} target="_blank" rel="noreferrer" key={video}>
+                Watch video
+              </a>
+            ))}
+          </div>
+        </section>
+      ) : null}
+    </main>
+  );
+}
+
 function PageFrame({ eyebrow, title, intro, children }) {
   return (
     <main>
@@ -497,6 +656,26 @@ function SoftCard({ title, text }) {
       <h3>{title}</h3>
       <p>{text}</p>
     </article>
+  );
+}
+
+function ActivityCard({ activity }) {
+  const image = getActivityImage(activity);
+  return (
+    <NavLink className="activity-card" to={`/activities/${activity.slug?.current}`}>
+      <div className="activity-card-media">
+        {image ? <img src={image} alt={activity.title} /> : <span>No image</span>}
+      </div>
+      <div className="activity-card-body">
+        <span className="mini-tag">{formatCategory(activity.category)}</span>
+        <h3>{activity.title}</h3>
+        <p>{activity.summary}</p>
+        <div className="activity-meta">
+          {activity.date ? <span>{formatDate(activity.date)}</span> : null}
+          {activity.location ? <span>{activity.location}</span> : null}
+        </div>
+      </div>
+    </NavLink>
   );
 }
 
@@ -531,6 +710,95 @@ function getInitials(name) {
     .slice(0, 2)
     .map((part) => part[0])
     .join("");
+}
+
+function useActivities() {
+  const [activities, setActivities] = useState(fallbackActivities);
+
+  useEffect(() => {
+    let mounted = true;
+
+    sanityClient
+      .fetch(activitiesQuery)
+      .then((items) => {
+        if (mounted && items?.length) {
+          setActivities(items);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setActivities(fallbackActivities);
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  return { activities };
+}
+
+function useActivity(slug) {
+  const [activity, setActivity] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    sanityClient
+      .fetch(activityBySlugQuery, { slug })
+      .then((item) => {
+        if (mounted) {
+          setActivity(item);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setActivity(null);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [slug]);
+
+  return { activity, loading };
+}
+
+function getActivityImage(activity) {
+  if (activity.coverUrl) return activity.coverUrl;
+  if (activity.coverImage) return urlFor(activity.coverImage)?.width(900).height(620).fit("crop").url();
+  return "";
+}
+
+function getActivityGallery(activity) {
+  if (activity.galleryUrls) return activity.galleryUrls;
+  if (activity.galleryImages?.length) {
+    return activity.galleryImages
+      .map((image) => urlFor(image)?.width(900).height(620).fit("crop").url())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function formatCategory(category) {
+  if (!category) return "Update";
+  return category
+    .split("-")
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function formatDate(date) {
+  return new Intl.DateTimeFormat("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  }).format(new Date(date));
 }
 
 export default App;
